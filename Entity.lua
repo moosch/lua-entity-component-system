@@ -25,7 +25,7 @@ local function Entity()
     components = components
   }
   -- Update global entity count
-  ECS.count = ECS.count + 1
+  count = count + 1
 
   function entity:addComponent(component)
     -- components[component.name] = component

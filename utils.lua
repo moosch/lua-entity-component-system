@@ -33,3 +33,11 @@ function keys(t)
   end
   return keyset
 end
+
+function length(t)
+  local i = 0
+  for k,v in pairs(t) do
+    if v then i = i+1 end
+  end
+  return i
+end

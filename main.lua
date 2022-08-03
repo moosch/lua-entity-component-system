@@ -11,13 +11,15 @@ function love.load()
   local Systems = require 'Systems'
   local Assemblages = require 'Assemblages'
 
-  ECS = { count = 0, score = 0 }
+  count = 0
+  score = 0
+
   ECS.Entity = Entity
   ECS.Components = Components
   ECS.Systems = Systems
   ECS.Assemblages = Assemblages
 
-  playerPosition = {
+  cursorPosition = {
     x = love.graphics.getWidth() / 2,
     y = love.graphics.getHeight() / 2
   }
@@ -43,15 +45,20 @@ function love.load()
 
   -- Create player entity
   local player = ECS.Entity()
-  player:addComponent(ECS.Components.Appearance())
-  player:addComponent(ECS.Components.Position({ x = playerPosition.x, y = playerPosition.y }))
+  local component = ECS.Components.Appearance({
+      colors = {
+        r = 1.0,
+        g = 0.0,
+        b = 0.0,
+        a = 1.0
+      },
+      size = 20
+  })
+  player:addComponent(component)
+  player:addComponent(ECS.Components.Position({ x = cursorPosition.x, y = cursorPosition.y }))
   player:addComponent(ECS.Components.Collision())
   player:addComponent(ECS.Components.PlayerControlled())
   player:addComponent(ECS.Components.Health())
-  player.components.appearance.colors.r = 1.0
-  player.components.appearance.colors.g = 0.0
-  player.components.appearance.colors.b = 0.0
-  player.components.appearance.colors.a = 1.0
 
   entities[player.id] = player
 
@@ -59,16 +66,26 @@ function love.load()
 end
 
 function love.update(dt)
-  -- Update mouse position
-end
-
-function love.draw()
   x, y = love.mouse.getPosition()
   cursorPosition = { x = x, y = y }
 
-  for i = 1, #ECS.Systems, 1 do
-    ECS.Systems[i](entities)
+  if ECS.Systems.Update then
+    for i = 1, #ECS.Systems.Update, 1 do
+      ECS.Systems.Update[i](entities, dt)
+    end
   end
+end
+
+function love.draw()
+  if ECS.Systems.Draw then
+    for i = 1, #ECS.Systems.Draw, 1 do
+      ECS.Systems.Draw[i](entities)
+    end
+  end
+
+  -- for i = 1, #ECS.Systems, 1 do
+  --   ECS.Systems[i](entities)
+  -- end
 end
 
 function love.keypressed(key)
