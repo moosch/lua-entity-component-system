@@ -61,6 +61,7 @@ function love.load()
   player:addComponent(ECS.Components.Health())
 
   entities[player.id] = player
+  playerEntityId = player.id
 
   ECS.entities = entities
 end
