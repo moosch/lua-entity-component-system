@@ -87,6 +87,9 @@ function love.draw()
   -- for i = 1, #ECS.Systems, 1 do
   --   ECS.Systems[i](entities)
   -- end
+
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
 end
 
 function love.keypressed(key)
